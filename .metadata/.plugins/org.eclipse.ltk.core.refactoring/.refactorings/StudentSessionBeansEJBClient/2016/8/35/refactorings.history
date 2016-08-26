@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;TakeawayRemote.java&apos; to &apos;SolutionsSessionBeansEJBClient/ejbModule/solutions.sessionbeans.ejb&apos;&#x0D;&#x0A;- Original project: &apos;StudentSessionBeansEJBClient&apos;&#x0D;&#x0A;- Destination element: &apos;SolutionsSessionBeansEJBClient/ejbModule/solutions.sessionbeans.ejb&apos;&#x0D;&#x0A;- Original element: &apos;student.sessionbeans.ejb.TakeawayRemote.java&apos;" description="Copy compilation unit" destination="=SolutionsSessionBeansEJBClient/ejbModule&lt;solutions.sessionbeans.ejb" element1="/ejbModule&lt;student.sessionbeans.ejb{TakeawayRemote.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1472011943662" units="1" version="1.0"/>
+</session>

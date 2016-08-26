@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;StudetSessionBeansAppClient&apos; to &apos;StudentSessionBeansAppClient&apos;" description="Rename resource &apos;StudetSessionBeansAppClient&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/StudetSessionBeansAppClient" name="StudentSessionBeansAppClient" stamp="1471589352761" updateReferences="true"/>
+</session>

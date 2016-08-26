@@ -1,0 +1,18 @@
+package portfolio.manager.ejb;
+
+import javax.ejb.Stateful;
+
+/**
+ * Session Bean implementation class PortfolioManagerBean
+ */
+@Stateful
+public class PortfolioManagerBean implements PortfolioManagerBeanRemote, PortfolioManagerBeanLocal {
+
+    /**
+     * Default constructor. 
+     */
+    public PortfolioManagerBean() {
+        // TODO Auto-generated constructor stub
+    }
+
+}

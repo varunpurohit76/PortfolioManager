@@ -1,0 +1,18 @@
+package beans.takeaway.ejb;
+
+import javax.ejb.Stateful;
+
+/**
+ * Session Bean implementation class Dish
+ */
+@Stateful
+public class Dish implements DishRemote, DishLocal {
+
+    /**
+     * Default constructor. 
+     */
+    public Dish() {
+        // TODO Auto-generated constructor stub
+    }
+
+}
