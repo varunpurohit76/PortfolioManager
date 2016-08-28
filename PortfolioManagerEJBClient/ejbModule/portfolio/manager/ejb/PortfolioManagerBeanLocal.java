@@ -10,5 +10,5 @@ import portfolio.manager.jpa.User;
 public interface PortfolioManagerBeanLocal {
 	public void addUser();
 	public List<User> getAllUsers();
-
+	void addUser2(String fname, String lname);
 }

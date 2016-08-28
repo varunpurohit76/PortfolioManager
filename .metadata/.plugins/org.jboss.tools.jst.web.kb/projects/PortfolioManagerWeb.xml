@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kb-project>
  <depends-on-projects>
+  <project name="PortfolioManagerEJBClient"/>
   <project name="PortfolioManagerJPA"/>
  </depends-on-projects>
  <used-by-projects/>
@@ -116,7 +117,10 @@
   <path value="C:/Grad software 2016/Java Tools/wildfly-10.0.0.Final/wildfly-10.0.0.Final/modules/system/layers/base/org/jboss/ejb3/main/jboss-ejb3-ext-api-2.2.0.Final.jar"/>
   <path value="C:/Grad software 2016/Java Tools/wildfly-10.0.0.Final/wildfly-10.0.0.Final/modules/system/layers/base/javax/validation/api/main/validation-api-1.1.0.Final.jar"/>
  </paths>
- <includes/>
+ <validation>
+  <el/>
+ </validation>
  <aliases/>
+ <includes/>
  <uris/>
 </kb-project>

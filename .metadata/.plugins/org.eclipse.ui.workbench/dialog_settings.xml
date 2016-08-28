@@ -9,17 +9,25 @@
 		<item value="350" key="dialogWidth"/>
 		<list key="textEntries">
 			<item value="1"/>
+			<item value="1"/>
+			<item value="1"/>
 			<item value="2"/>
 		</list>
 		<list key="orderedElements">
+			<item value="org.eclipse.datatools.connectivity.DataSourceExplorerNavigator"/>
+			<item value="org.eclipse.ui.views.AllMarkersView"/>
 			<item value="org.eclipse.rse.ui.view.teamView"/>
 			<item value="org.eclipse.wst.server.ui.ServersView"/>
 		</list>
 		<list key="orderedProviders">
 			<item value="org.eclipse.e4.ui.parts"/>
 			<item value="org.eclipse.e4.ui.parts"/>
+			<item value="org.eclipse.e4.ui.parts"/>
+			<item value="org.eclipse.e4.ui.parts"/>
 		</list>
 		<list key="textArray">
+			<item value="data"/>
+			<item value="mar"/>
 			<item value="team"/>
 			<item value="serve"/>
 			<item value="ser"/>

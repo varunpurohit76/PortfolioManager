@@ -1,0 +1,22 @@
+package portfolio.manager.jpa;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+/**
+ * Entity implementation class for Entity: Portfolio
+ *
+ */
+@Entity
+@Table(name="portfolio")
+
+public class Portfolio implements Serializable {
+
+	
+	private static final long serialVersionUID = 1L;
+
+	public Portfolio() {
+		super();
+	}
+   
+}

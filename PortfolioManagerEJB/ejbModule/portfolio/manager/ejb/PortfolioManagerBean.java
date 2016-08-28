@@ -34,6 +34,14 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		u.setLastName("Twain2");
 		em.persist(u);
 	}
+	
+	@Override
+	public void addUser2(String fname, String lname) {
+		User u = new User();
+		u.setFirstName(fname);
+		u.setLastName(lname);
+		em.persist(u);
+	}
 
 	@Override
 	public List<User> getAllUsers() {
