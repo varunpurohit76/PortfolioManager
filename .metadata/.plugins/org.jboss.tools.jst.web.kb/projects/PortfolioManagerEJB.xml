@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kb-project>
  <depends-on-projects>
+  <project name="PortfolioManagerJPA"/>
   <project name="PortfolioManagerEJBClient"/>
  </depends-on-projects>
  <used-by-projects/>
@@ -117,6 +118,7 @@
   <path value="C:/Grad software 2016/Java Tools/wildfly-10.0.0.Final/wildfly-10.0.0.Final/modules/system/layers/base/javax/validation/api/main/validation-api-1.1.0.Final.jar"/>
  </paths>
  <validation>
+  <core validator-id="jboss.cdi.core"/>
   <el/>
  </validation>
  <aliases/>

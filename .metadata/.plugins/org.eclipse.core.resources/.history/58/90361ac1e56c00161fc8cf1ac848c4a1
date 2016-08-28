@@ -1,0 +1,93 @@
+package portfolio.manager.jpa;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+
+/**
+ * The persistent class for the portfolio database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Portfolio.findAll", query="SELECT p FROM Portfolio p")
+public class Portfolio implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int portfolioID;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdate;
+
+	private String portfolioName;
+
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name="fk_userID")
+	private User user;
+
+	//bi-directional many-to-one association to Transaction
+	@OneToMany(mappedBy="portfolio")
+	private List<Transaction> transactions;
+
+	public Portfolio() {
+	}
+
+	public int getPortfolioID() {
+		return this.portfolioID;
+	}
+
+	public void setPortfolioID(int portfolioID) {
+		this.portfolioID = portfolioID;
+	}
+
+	public Date getLastUpdate() {
+		return this.lastUpdate;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public String getPortfolioName() {
+		return this.portfolioName;
+	}
+
+	public void setPortfolioName(String portfolioName) {
+		this.portfolioName = portfolioName;
+	}
+
+	public User getUser() {
+		return this.user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<Transaction> getTransactions() {
+		return this.transactions;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public Transaction addTransaction(Transaction transaction) {
+		getTransactions().add(transaction);
+		transaction.setPortfolio(this);
+
+		return transaction;
+	}
+
+	public Transaction removeTransaction(Transaction transaction) {
+		getTransactions().remove(transaction);
+		transaction.setPortfolio(null);
+
+		return transaction;
+	}
+
+}

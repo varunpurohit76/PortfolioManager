@@ -11,9 +11,15 @@
 			<item value="1"/>
 			<item value="1"/>
 			<item value="1"/>
+			<item value="1"/>
+			<item value="1"/>
+			<item value="1"/>
 			<item value="2"/>
 		</list>
 		<list key="orderedElements">
+			<item value="org.eclipse.ui.navigator.ProjectExplorer"/>
+			<item value="org.eclipse.datatools.connectivity.internal.ui.wizards.newconnectionprofile"/>
+			<item value="org.eclipse.rse.ui.newWizards.connection"/>
 			<item value="org.eclipse.datatools.connectivity.DataSourceExplorerNavigator"/>
 			<item value="org.eclipse.ui.views.AllMarkersView"/>
 			<item value="org.eclipse.rse.ui.view.teamView"/>
@@ -21,11 +27,17 @@
 		</list>
 		<list key="orderedProviders">
 			<item value="org.eclipse.e4.ui.parts"/>
+			<item value="org.eclipse.ui.wizards"/>
+			<item value="org.eclipse.ui.wizards"/>
+			<item value="org.eclipse.e4.ui.parts"/>
 			<item value="org.eclipse.e4.ui.parts"/>
 			<item value="org.eclipse.e4.ui.parts"/>
 			<item value="org.eclipse.e4.ui.parts"/>
 		</list>
 		<list key="textArray">
+			<item value="project e"/>
+			<item value="conn"/>
+			<item value="conne"/>
 			<item value="data"/>
 			<item value="mar"/>
 			<item value="team"/>

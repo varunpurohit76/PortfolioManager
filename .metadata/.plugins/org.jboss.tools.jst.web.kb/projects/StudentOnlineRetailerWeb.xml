@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kb-project>
  <depends-on-projects>
-  <project name="StudentOnlineRetailerJPA"/>
   <project name="StudentOnlineRetailerEJBClient"/>
+  <project name="StudentOnlineRetailerJPA"/>
  </depends-on-projects>
  <used-by-projects/>
  <paths>

@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import portfolio.manager.ejb.PortfolioManagerBeanLocal;
+import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.User;
 
 @Path("/users")
@@ -36,6 +37,19 @@ public class UserResource {
 		else {
 			List<User> u = bean.getAllUsers();
 			return u;
+		}
+	}
+	
+	@GET
+	@Path("/getport")
+	@Produces("application/json")
+	public List<Portfolio> getPortfolio() {
+
+		if (bean == null) 
+			return null;
+		else {
+			List<Portfolio> p = bean.getPortfolio();
+			return p;
 		}
 	}
 	

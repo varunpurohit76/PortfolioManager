@@ -1,0 +1,109 @@
+package portfolio.manager.jpa;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.List;
+
+
+/**
+ * The persistent class for the stocks database table.
+ * 
+ */
+@Entity
+@Table(name="stocks")
+@NamedQuery(name="Stock.findAll", query="SELECT s FROM Stock s")
+public class Stock implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@EmbeddedId
+	private StockPK id;
+
+	private BigDecimal close;
+
+	private BigDecimal high;
+
+	private BigDecimal low;
+
+	private BigDecimal open;
+
+	private BigDecimal volume;
+
+	//bi-directional many-to-one association to Transaction
+	@OneToMany(mappedBy="stock")
+	private List<Transaction> transactions;
+
+	public Stock() {
+	}
+
+	public StockPK getId() {
+		return this.id;
+	}
+
+	public void setId(StockPK id) {
+		this.id = id;
+	}
+
+	public BigDecimal getClose() {
+		return this.close;
+	}
+
+	public void setClose(BigDecimal close) {
+		this.close = close;
+	}
+
+	public BigDecimal getHigh() {
+		return this.high;
+	}
+
+	public void setHigh(BigDecimal high) {
+		this.high = high;
+	}
+
+	public BigDecimal getLow() {
+		return this.low;
+	}
+
+	public void setLow(BigDecimal low) {
+		this.low = low;
+	}
+
+	public BigDecimal getOpen() {
+		return this.open;
+	}
+
+	public void setOpen(BigDecimal open) {
+		this.open = open;
+	}
+
+	public BigDecimal getVolume() {
+		return this.volume;
+	}
+
+	public void setVolume(BigDecimal volume) {
+		this.volume = volume;
+	}
+
+	public List<Transaction> getTransactions() {
+		return this.transactions;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public Transaction addTransaction(Transaction transaction) {
+		getTransactions().add(transaction);
+		transaction.setStock(this);
+
+		return transaction;
+	}
+
+	public Transaction removeTransaction(Transaction transaction) {
+		getTransactions().remove(transaction);
+		transaction.setStock(null);
+
+		return transaction;
+	}
+
+}

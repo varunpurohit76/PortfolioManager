@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
+import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.User;
 
 @Remote
@@ -11,4 +12,5 @@ public interface PortfolioManagerBeanRemote {
 	public void addUser();
 	public List<User> getAllUsers();
 	void addUser2(String fname, String lname);
+	public List<Portfolio> getPortfolio();
 }

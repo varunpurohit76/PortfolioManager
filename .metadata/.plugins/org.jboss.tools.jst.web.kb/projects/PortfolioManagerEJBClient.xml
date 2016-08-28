@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kb-project>
- <depends-on-projects/>
+ <depends-on-projects>
+  <project name="PortfolioManagerJPA"/>
+ </depends-on-projects>
  <used-by-projects>
+  <project name="PortfolioManagerWeb"/>
   <project name="PortfolioManagerEJB"/>
  </used-by-projects>
  <paths>

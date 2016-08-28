@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.User;
 
 @Local
@@ -11,4 +12,5 @@ public interface PortfolioManagerBeanLocal {
 	public void addUser();
 	public List<User> getAllUsers();
 	void addUser2(String fname, String lname);
+	public List<Portfolio> getPortfolio();
 }

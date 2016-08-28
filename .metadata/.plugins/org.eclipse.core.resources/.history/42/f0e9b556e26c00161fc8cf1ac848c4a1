@@ -1,0 +1,87 @@
+package portfolio.manager.jpa;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+
+/**
+ * The persistent class for the portfolio database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Portfolio.findAll", query="SELECT p FROM Portfolio p")
+public class Portfolio implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	private int portfolioID;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdate;
+
+	private String portfolioName;
+
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name="fk_userID")
+	private User user;
+
+	//bi-directional many-to-many association to Stock
+	@ManyToMany
+	@JoinTable(
+		name="transaction"
+		, joinColumns={
+			@JoinColumn(name="fk_portfolioID")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="fk_ticker", referencedColumnName="ticker")
+			}
+		)
+	private List<Stock> stocks;
+
+	public Portfolio() {
+	}
+
+	public int getPortfolioID() {
+		return this.portfolioID;
+	}
+
+	public void setPortfolioID(int portfolioID) {
+		this.portfolioID = portfolioID;
+	}
+
+	public Date getLastUpdate() {
+		return this.lastUpdate;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public String getPortfolioName() {
+		return this.portfolioName;
+	}
+
+	public void setPortfolioName(String portfolioName) {
+		this.portfolioName = portfolioName;
+	}
+
+	public User getUser() {
+		return this.user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<Stock> getStocks() {
+		return this.stocks;
+	}
+
+	public void setStocks(List<Stock> stocks) {
+		this.stocks = stocks;
+	}
+
+}

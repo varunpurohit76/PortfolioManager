@@ -1,0 +1,66 @@
+package portfolio.manager.jpa;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+
+
+/**
+ * The persistent class for the portfolio database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Portfolio.findAll", query="SELECT p FROM Portfolio p")
+public class Portfolio implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int portfolioID;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdate;
+
+	private String portfolioName;
+
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name="fk_userID")
+	private User user;
+
+	public Portfolio() {
+	}
+
+	public int getPortfolioID() {
+		return this.portfolioID;
+	}
+
+	public void setPortfolioID(int portfolioID) {
+		this.portfolioID = portfolioID;
+	}
+
+	public Date getLastUpdate() {
+		return this.lastUpdate;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public String getPortfolioName() {
+		return this.portfolioName;
+	}
+
+	public void setPortfolioName(String portfolioName) {
+		this.portfolioName = portfolioName;
+	}
+
+	public User getUser() {
+		return this.user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+}
