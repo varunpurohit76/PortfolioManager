@@ -1,5 +1,6 @@
 package portfolio.manager.ejb;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Local;
@@ -16,7 +17,6 @@ import portfolio.manager.jpa.User;
  * Session Bean implementation class PortfolioManagerBean
  */
 @Stateful
-
 @Remote(PortfolioManagerBeanRemote.class)
 @Local(PortfolioManagerBeanLocal.class)
 public class PortfolioManagerBean implements PortfolioManagerBeanRemote, PortfolioManagerBeanLocal {
@@ -35,10 +35,10 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		u.setLastName("Twain2");
 		em.persist(u);
 	}
+	User u = new User();
 	
 	@Override
 	public void addUser2(String fname, String lname) {
-		User u = new User();
 		u.setFirstName(fname);
 		u.setLastName(lname);
 		em.persist(u);
@@ -57,6 +57,15 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		TypedQuery<Portfolio> query = em.createQuery("SELECT p FROM Portfolio AS p", Portfolio.class);
 		List<Portfolio> portfolios = query.getResultList();
 		return portfolios;
+	}
+	
+	@Override
+	public void addPortfolio(String portfolioName) {
+		Portfolio p = new Portfolio();
+		p.setPortfolioName(portfolioName);
+		p.setLastUpdated(new Date());
+		p.setUser(u);
+		em.persist(p);
 	}
 
 }

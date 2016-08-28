@@ -13,4 +13,5 @@ public interface PortfolioManagerBeanRemote {
 	public List<User> getAllUsers();
 	void addUser2(String fname, String lname);
 	public List<Portfolio> getPortfolio();
+	void addPortfolio(String portfolioName);
 }

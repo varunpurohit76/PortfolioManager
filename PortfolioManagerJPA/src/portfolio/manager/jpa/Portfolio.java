@@ -2,6 +2,10 @@ package portfolio.manager.jpa;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.Date;
 import java.util.List;
 
@@ -26,10 +30,12 @@ public class Portfolio implements Serializable {
 	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="fk_userID")
+	@JsonManagedReference
 	private User user;
 
 	//bi-directional many-to-one association to Holding
 	@OneToMany(mappedBy="portfolio")
+	@JsonBackReference
 	private List<Holding> holdings;
 
 	public Portfolio() {

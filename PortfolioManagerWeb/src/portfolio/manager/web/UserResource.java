@@ -1,4 +1,5 @@
 package portfolio.manager.web;
+import java.util.Date;
 import java.util.List;
 
 import javax.naming.InitialContext;
@@ -59,6 +60,13 @@ public class UserResource {
 	public void addUser(adduser u) {
 	    bean.addUser2(u.fname,u.lname);
 	}
+
+	@POST
+	@Path("/postport")
+	@Consumes("application/json")
+	public void addPort(addportfolio p) {
+	    bean.addPortfolio(p.portfolioName);
+	}
 }
 
 class adduser{
@@ -75,5 +83,16 @@ class adduser{
 	}
 	public void setLname(String lname) {
 		this.lname = lname;
+	}
+}
+
+class addportfolio {
+
+	public String portfolioName;
+	public String getPortfolioName() {
+		return portfolioName;
+	}
+	public void setPortfolioName(String portfolioName) {
+		this.portfolioName = portfolioName;
 	}
 }

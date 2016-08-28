@@ -1,0 +1,97 @@
+package portfolio.manager.jpa;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.Date;
+import java.util.List;
+
+
+/**
+ * The persistent class for the portfolio database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Portfolio.findAll", query="SELECT p FROM Portfolio p")
+public class Portfolio implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	private int portfolioID;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdated;
+
+	private String portfolioName;
+
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name="fk_userID")
+	@JsonManagedReference
+	private User user;
+
+	//bi-directional many-to-one association to Holding
+	@OneToMany(mappedBy="portfolio")
+	private List<Holding> holdings;
+
+	public Portfolio() {
+	}
+
+	public int getPortfolioID() {
+		return this.portfolioID;
+	}
+
+	public void setPortfolioID(int portfolioID) {
+		this.portfolioID = portfolioID;
+	}
+
+	public Date getLastUpdated() {
+		return this.lastUpdated;
+	}
+
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
+
+	public String getPortfolioName() {
+		return this.portfolioName;
+	}
+
+	public void setPortfolioName(String portfolioName) {
+		this.portfolioName = portfolioName;
+	}
+
+	public User getUser() {
+		return this.user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<Holding> getHoldings() {
+		return this.holdings;
+	}
+
+	public void setHoldings(List<Holding> holdings) {
+		this.holdings = holdings;
+	}
+
+	public Holding addHolding(Holding holding) {
+		getHoldings().add(holding);
+		holding.setPortfolio(this);
+
+		return holding;
+	}
+
+	public Holding removeHolding(Holding holding) {
+		getHoldings().remove(holding);
+		holding.setPortfolio(null);
+
+		return holding;
+	}
+
+}

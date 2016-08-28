@@ -2,6 +2,9 @@ package portfolio.manager.jpa;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.Date;
 
 
@@ -29,6 +32,7 @@ public class Holding implements Serializable {
 	//bi-directional many-to-one association to Portfolio
 	@ManyToOne
 	@JoinColumn(name="fk_portfolioID")
+	@JsonManagedReference
 	private Portfolio portfolio;
 
 	//bi-directional many-to-one association to Stock
