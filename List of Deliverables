@@ -1,0 +1,22 @@
+ARBRITRAGE SEEKER, a portfolio management application is intended to help the user invest smartly in various financial instruments in order to get the maximum returns out of it.
+
+The list of deliverables is as follows : 
+1. Profile Screen : 
+              User's profile will include user's personal information such as first name and last name.
+              List of existing portfolios.
+              Options to create a new portfolio and modify an existing portfolio.
+              Portfolio Valuation tab beside eah portfolio's name indicating the net worth. 
+2. Portfolio Screen : 
+              This will include a display of the portfolio details such as securities already present with their calculated weightage in that portfolio.
+              Options to add and remove further securities in a portfolio.
+              A search tab to search securities available.
+              The value of total portfolio valuation.
+              A profit-loss graph displaying the current profit-loss statistics.
+3. Security information box : 
+              Displays the details of a particular security such as current market price, open and close prices etc.
+              
+              
+
+
+FUTURE SCOPE : 
+Portfolio can be recommended to users based on their transaction history.
