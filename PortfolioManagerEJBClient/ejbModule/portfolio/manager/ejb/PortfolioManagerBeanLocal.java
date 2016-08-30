@@ -1,17 +1,28 @@
 package portfolio.manager.ejb;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Local;
 
+import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
+import portfolio.manager.jpa.ReturnDouble;
 import portfolio.manager.jpa.User;
+import portfolio.manager.jpa.AggStock;
 
 @Local
 public interface PortfolioManagerBeanLocal {
-	public void addUser();
+	public void addUser(String fname, String lname);
 	public List<User> getAllUsers();
-	void addUser2(String fname, String lname);
+//	public void addUser2(String fname, String lname);
 	public List<Portfolio> getPortfolio();
-	void addPortfolio(String portfolioName);
+	public void addPortfolio(int userID, String portfolioName);
+	public List<Portfolio> getPortfolioByID(int portfolioID);
+	public List<Holding> getHoldingsByPortfolioID(int portfolioID);
+	public boolean addHolding(int portfolioID, double buyPrice, int buyQuantity, String ticker, Date buyDate);
+	public int removeHolding(int holdingID);
+	boolean removePortfolio(int portfolioID);
+	List<AggStock> getAggHoldingsByPortfolioID(int portfolioID);
+	ReturnDouble getInvestedValue(int portfolioID);
 }

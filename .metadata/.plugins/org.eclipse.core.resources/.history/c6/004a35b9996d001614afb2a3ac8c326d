@@ -1,0 +1,9 @@
+package portfolio.manager.web;
+
+import javax.ws.rs.Path;
+
+@Path("/portfolio")
+
+public class PortfolioResources {
+
+}

@@ -6,14 +6,14 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("/rest")
+@ApplicationPath("/resources")
 public class PortfolioManagerWeb extends Application {
 	
 	private Set<Object> singletons = new HashSet<Object>();
 	private Set<Class<?>> empty = new HashSet<Class<?>>();
 
 	public PortfolioManagerWeb() {
-		singletons.add(new UserResource());
+		singletons.add(new Resource());
 	}
 
 	@Override

@@ -1,0 +1,20 @@
+package portfolio.manager.ejb;
+
+import java.util.List;
+
+import javax.ejb.Remote;
+
+import portfolio.manager.jpa.Holding;
+import portfolio.manager.jpa.Portfolio;
+import portfolio.manager.jpa.User;
+
+@Remote
+public interface PortfolioManagerBeanRemote {
+	public void addUser();
+	public List<User> getAllUsers();
+	public void addUser2(String fname, String lname);
+	public List<Portfolio> getPortfolio();
+	public void addPortfolio(String portfolioName);
+	public List<Portfolio> getPortfolioByID(int portfolioID);
+	public List<Holding> getHoldingsbyPortfolioID(int portfolioID);
+}

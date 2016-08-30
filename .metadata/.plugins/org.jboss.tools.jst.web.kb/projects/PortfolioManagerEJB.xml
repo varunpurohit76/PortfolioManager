@@ -119,6 +119,7 @@
  </paths>
  <validation>
   <core validator-id="jboss.cdi.core"/>
+  <core validator-id="batch-verification"/>
   <el/>
  </validation>
  <aliases/>

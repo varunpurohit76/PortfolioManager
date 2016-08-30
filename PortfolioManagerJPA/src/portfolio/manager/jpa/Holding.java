@@ -13,6 +13,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Table(name="holding")
 @NamedQuery(name="Holding.findAll", query="SELECT h FROM Holding h")
 public class Holding implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -38,6 +39,7 @@ public class Holding implements Serializable {
 	//bi-directional many-to-one association to Stock
 	@ManyToOne
 	@JoinColumn(name="fk_recordID")
+	@JsonManagedReference
 	private Stock stock;
 
 	public Holding() {

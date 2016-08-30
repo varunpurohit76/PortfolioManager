@@ -1,0 +1,7 @@
+package portfolio.manager.jpa;
+
+class AggStock {
+	public int quantity;
+	public double totalprice;
+	public String ticker;
+}

@@ -22,7 +22,6 @@
 <fullyQualifiedTypeName name="javax.persistence.EntityManager"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="student.onlineretailer.jpa.Category"/>
-<fullyQualifiedTypeName name="javax.persistence.Query"/>
 <fullyQualifiedTypeName name="java.util.Properties"/>
 <fullyQualifiedTypeName name="javax.naming.Context"/>
 <fullyQualifiedTypeName name="javax.naming.InitialContext"/>
@@ -36,8 +35,6 @@
 <fullyQualifiedTypeName name="java.util.HashSet"/>
 <fullyQualifiedTypeName name="student.online.web.StudentOnlineRetailerWeb"/>
 <fullyQualifiedTypeName name="student.onlineretailer.ejb.OnlineRetailerBeanLocal"/>
-<fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonManagedReference"/>
-<fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonBackReference"/>
 <fullyQualifiedTypeName name="portfolio.manager.jpa.Helloworld"/>
 <fullyQualifiedTypeName name="javax.persistence.Table"/>
 <fullyQualifiedTypeName name="javax.persistence.Entity"/>
@@ -47,4 +44,17 @@
 <fullyQualifiedTypeName name="javax.ws.rs.ApplicationPath"/>
 <fullyQualifiedTypeName name="javax.persistence.Id"/>
 <fullyQualifiedTypeName name="java.io.Serializable"/>
+<fullyQualifiedTypeName name="portfolio.manager.jpa.Portfolio"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonManagedReference"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonBackReference"/>
+<fullyQualifiedTypeName name="javax.ws.rs.PathParam"/>
+<fullyQualifiedTypeName name="portfolio.manager.jpa.Holding"/>
+<fullyQualifiedTypeName name="javax.persistence.Query"/>
+<fullyQualifiedTypeName name="portfolio.manager.web.removeholding"/>
+<fullyQualifiedTypeName name="sun.util.calendar.BaseCalendar.Date"/>
+<fullyQualifiedTypeName name="java.util.Date"/>
+<fullyQualifiedTypeName name="portfolio.manager.jpa.Stock"/>
+<fullyQualifiedTypeName name="java.text.DateFormat"/>
+<fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.annotation.JsonProperty"/>
 </qualifiedTypeNameHistroy>

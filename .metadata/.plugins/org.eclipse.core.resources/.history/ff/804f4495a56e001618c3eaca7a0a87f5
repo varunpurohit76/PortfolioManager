@@ -1,0 +1,5 @@
+package portfolio.manager.jpa;
+
+public class AggStock {
+
+}

@@ -1,0 +1,102 @@
+package portfolio.manager.jpa;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.Date;
+
+
+/**
+ * The persistent class for the holding database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Holding.findAll", query="SELECT h FROM Holding h")
+public class Holding implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	private int holdingID;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date buyDate;
+
+	private double buyPrice;
+
+	private int buyQuantity;
+
+	private String ticker;
+
+	//bi-directional many-to-one association to Portfolio
+	@ManyToOne
+	@JoinColumn(name="fk_portfolioID")
+	@JsonManagedReference
+	private Portfolio portfolio;
+
+	//bi-directional many-to-one association to Stock
+	@ManyToOne
+	@JoinColumn(name="fk_recordID")
+	private Stock stock;
+
+	public Holding() {
+	}
+
+	public int getHoldingID() {
+		return this.holdingID;
+	}
+
+	public void setHoldingID(int holdingID) {
+		this.holdingID = holdingID;
+	}
+
+	public Date getBuyDate() {
+		return this.buyDate;
+	}
+
+	public void setBuyDate(Date buyDate) {
+		this.buyDate = buyDate;
+	}
+
+	public double getBuyPrice() {
+		return this.buyPrice;
+	}
+
+	public void setBuyPrice(double buyPrice) {
+		this.buyPrice = buyPrice;
+	}
+
+	public int getBuyQuantity() {
+		return this.buyQuantity;
+	}
+
+	public void setBuyQuantity(int buyQuantity) {
+		this.buyQuantity = buyQuantity;
+	}
+
+	public String getTicker() {
+		return this.ticker;
+	}
+
+	public void setTicker(String ticker) {
+		this.ticker = ticker;
+	}
+
+	public Portfolio getPortfolio() {
+		return this.portfolio;
+	}
+
+	public void setPortfolio(Portfolio portfolio) {
+		this.portfolio = portfolio;
+	}
+
+	public Stock getStock() {
+		return this.stock;
+	}
+
+	public void setStock(Stock stock) {
+		this.stock = stock;
+	}
+
+}

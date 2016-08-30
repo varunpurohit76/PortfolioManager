@@ -1,5 +1,6 @@
 package portfolio.manager.ejb;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,9 +9,14 @@ import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import portfolio.manager.jpa.AggStock;
+import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
+import portfolio.manager.jpa.ReturnDouble;
+import portfolio.manager.jpa.Stock;
 import portfolio.manager.jpa.User;
 
 /**
@@ -29,27 +35,28 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 	}
 
 	@Override
-	public void addUser() {
+	public void addUser(String fname, String lname) {
 		User u = new User();
-		u.setFirstName("Mark1");
-		u.setLastName("Twain2");
-		em.persist(u);
-	}
-	User u = new User();
-	
-	@Override
-	public void addUser2(String fname, String lname) {
 		u.setFirstName(fname);
 		u.setLastName(lname);
 		em.persist(u);
 	}
-
+	
 	@Override
 	public List<User> getAllUsers() {
-		TypedQuery<User> query = em.createQuery("SELECT u FROM User AS u", User.class);
+		TypedQuery<User> query = em.createQuery("SELECT u FROM User AS u ORDER BY", User.class);
 		List<User> users = query.getResultList();
-		System.out.println(users);
 		return users;
+	}
+	
+	@Override
+	public void addPortfolio(int userID, String portfolioName) {
+		Portfolio p = new Portfolio();
+		User user = em.find(User.class, userID);
+		p.setUser(user);
+		p.setPortfolioName(portfolioName);
+		p.setLastUpdated(new Date());
+		em.persist(p);
 	}
 	
 	@Override
@@ -60,12 +67,92 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 	}
 	
 	@Override
-	public void addPortfolio(String portfolioName) {
-		Portfolio p = new Portfolio();
-		p.setPortfolioName(portfolioName);
-		p.setLastUpdated(new Date());
-		p.setUser(u);
-		em.persist(p);
+	public List<Portfolio> getPortfolioByID( int portfolioID) {
+		String sql = "SELECT p FROM Portfolio AS p WHERE p.portfolioID = " + portfolioID;
+		TypedQuery<Portfolio> query = em.createQuery(sql, Portfolio.class);
+		List<Portfolio> portfolio = query.getResultList();
+		return portfolio;
 	}
+	
+	@Override
+	public List<Holding> getHoldingsByPortfolioID( int portfolioID) {
+		TypedQuery<Holding> query = em.createQuery("SELECT h FROM Holding AS h WHERE h.portfolio = :name", Holding.class);
+        query.setParameter("name", em.find(Portfolio.class, portfolioID));
+		List<Holding> holdings = query.getResultList();
+		return holdings;
+	}
+	
+	@Override
+	public List<AggStock> getAggHoldingsByPortfolioID( int portfolioID) {
+		Query query = em.createNativeQuery("SELECT SUM(buyQuantity), SUM(buyPrice * buyQuantity), ticker FROM portfolio.holding  where fk_portfolioID = :portfolioID GROUP BY ticker ORDER BY ticker");
+        query.setParameter("portfolioID", portfolioID);
+		List<Object[]> holdings = query.getResultList();
+		ArrayList<AggStock> stocks = new ArrayList<AggStock>();
+		for(Object[] o:holdings)
+		{
+			stocks.add(new AggStock((java.math.BigDecimal) o[0], (double) o[1], (String) o[2]));
+		}
+		return stocks;
+	}
+	
+	
+	@Override
+	public boolean removePortfolio (int portfolioID) {
+		Query query_del_holding = em.createQuery("DELETE FROM Holding AS h WHERE h.portfolio = :name");
+        query_del_holding.setParameter("name", em.find(Portfolio.class, portfolioID));
+		query_del_holding.executeUpdate();
+		
+		Query query_del = em.createQuery("DELETE FROM Portfolio p WHERE p.portfolioID = :set");
+		int delStatus = query_del.setParameter("set", portfolioID).executeUpdate();
+		
+		if(delStatus == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean addHolding(int portfolioID, double buyPrice, int buyQuantity, String ticker, Date buyDate) {
 
+		String sql_check = "SELECT s FROM Stock AS s WHERE s.ticker = '" + ticker + "' AND s.date = ?";
+		TypedQuery <Stock> query_check = em.createQuery(sql_check, Stock.class);
+		query_check.setParameter(1, buyDate);
+		List<Stock> s_check = query_check.getResultList();
+		if(s_check.isEmpty()) {
+			return false;
+		}				
+		Holding h = new Holding();		
+		String sql_s = "SELECT s FROM Stock AS s WHERE s.ticker = '" + ticker + "' AND s.date = ?";
+		TypedQuery <Stock> query_s = em.createQuery(sql_s, Stock.class);
+		query_s.setParameter(1, buyDate);
+		Stock s = query_s.getSingleResult();
+		h.setStock(s);
+		Portfolio p_ref = em.find(Portfolio.class, portfolioID);
+		h.setPortfolio(p_ref);
+		h.setBuyDate(buyDate);
+		h.setBuyPrice(buyPrice);
+		h.setBuyQuantity(buyQuantity);
+		h.setTicker(ticker);
+		em.persist(h);
+		
+		return true;
+	}
+	
+	@Override
+	public int removeHolding(int holdingID) {
+		Query query = em.createQuery("DELETE FROM Holding h WHERE h.holdingID = :set");
+		int deleteStatus = query.setParameter("set", holdingID).executeUpdate();
+		return deleteStatus;
+	}
+	
+	@Override
+	public ReturnDouble getInvestedValue(int portfolioID) {
+		
+		Query query = em.createNativeQuery("SELECT SUM(buyPrice * buyQuantity) FROM portfolio.holding  where fk_portfolioID = :portfolioID");
+        query.setParameter("portfolioID", portfolioID);
+		Double value = (Double) query.getSingleResult();
+		ReturnDouble returnObject = new ReturnDouble(value);
+		return returnObject;
+	}
 }

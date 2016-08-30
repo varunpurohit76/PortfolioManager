@@ -15,6 +15,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="portfolio")
 @NamedQuery(name="Portfolio.findAll", query="SELECT p FROM Portfolio p")
 public class Portfolio implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -28,13 +29,13 @@ public class Portfolio implements Serializable {
 	private String portfolioName;
 
 	//bi-directional many-to-one association to User
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="fk_userID")
 	@JsonManagedReference
 	private User user;
 
 	//bi-directional many-to-one association to Holding
-	@OneToMany(mappedBy="portfolio")
+	@OneToMany(mappedBy="portfolio",cascade=CascadeType.ALL)
 	@JsonBackReference
 	private List<Holding> holdings;
 

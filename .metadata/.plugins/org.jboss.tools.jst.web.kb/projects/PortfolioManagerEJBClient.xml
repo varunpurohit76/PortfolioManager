@@ -4,8 +4,8 @@
   <project name="PortfolioManagerJPA"/>
  </depends-on-projects>
  <used-by-projects>
-  <project name="PortfolioManagerWeb"/>
   <project name="PortfolioManagerEJB"/>
+  <project name="PortfolioManagerWeb"/>
  </used-by-projects>
  <paths>
   <path value="C:/Grad software 2016/Java Tools/wildfly-10.0.0.Final/wildfly-10.0.0.Final/modules/system/layers/base/javax/servlet/jstl/api/main/jboss-jstl-api_1.2_spec-1.1.2.Final.jar">

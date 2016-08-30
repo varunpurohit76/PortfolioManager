@@ -28,7 +28,7 @@ public class Main {
 		
 		try {
 			PortfolioManagerBeanRemote bean = (PortfolioManagerBeanRemote) context.lookup("PortfolioManager/PortfolioManagerEJB/PortfolioManagerBean!portfolio.manager.ejb.PortfolioManagerBeanRemote");
-			bean.addUser();;
+			bean.addUser("hello","mark");;
 			System.out.println("----------------------");
 			List<User> usr = bean.getAllUsers();
 			System.out.println(usr);

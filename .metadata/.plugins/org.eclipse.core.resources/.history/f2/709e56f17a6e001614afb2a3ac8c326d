@@ -1,0 +1,194 @@
+package portfolio.manager.web;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import portfolio.manager.ejb.PortfolioManagerBeanLocal;
+import portfolio.manager.jpa.Holding;
+import portfolio.manager.jpa.Portfolio;
+import portfolio.manager.jpa.User;
+
+@Path("/rest")
+public class Resource {
+	
+	private PortfolioManagerBeanLocal bean;
+	
+	public Resource () {
+		try {
+			InitialContext context = new InitialContext();
+			bean = (PortfolioManagerBeanLocal) context.lookup("java:global/PortfolioManager/PortfolioManagerEJB/PortfolioManagerBean!portfolio.manager.ejb.PortfolioManagerBeanLocal");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@GET
+	@Path("/getAllUsers")
+	@Produces("application/json")
+	public List<User> getAllUsers() {
+
+		if (bean == null) 
+			return null;
+		else {
+			List<User> u = bean.getAllUsers();
+			return u;
+		}
+	}
+	
+	@GET
+	@Path("/getAllPortfolios")
+	@Produces("application/json")
+	public List<Portfolio> getPortfolio() {
+
+		if (bean == null) 
+			return null;
+		else {
+			List<Portfolio> p = bean.getPortfolio();
+			return p;
+		}
+	}
+	
+	@GET
+	@Path("/getPortfolioByID/{portfolioID}")
+	@Produces("application/json")
+	public List<Portfolio> getPortfolioByID(@PathParam("portfolioID") int portfolioID) {
+		if (bean == null) 
+			return null;
+		else {
+			List<Portfolio> p = bean.getPortfolioByID(portfolioID);
+			return p;
+		}
+	}
+	
+	@GET
+	@Path("/{getHoldingsByPortfolioID}/{portfolioID}")
+	@Produces("application/json")
+	public List<Holding> getHoldingsByPortfolioID(@PathParam("portfolioID") int portfolioID) {
+		System.out.println("inside the function");
+		if (bean == null) 
+			return null;
+		else {
+			System.out.println("bean is not null");
+			List<Holding> p = bean.getHoldingsByPortfolioID(portfolioID);
+			return p;
+		}
+	}
+	
+	@POST
+	@Path("/addUser")
+	@Consumes("application/json")
+	public void addUser(adduser u) {
+	    bean.addUser(u.fname,u.lname);
+	}
+	
+	@POST
+	@Path("/addPortfolio")
+	@Consumes("application/json")
+	public void addPort(addportfolio p) {
+	    bean.addPortfolio(1,p.portfolioName);
+	}
+	
+	@POST
+	@Path("/addHolding")
+	@Consumes("application/json")
+	public boolean addHolding(addholding h) throws ParseException {
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+	    return bean.addHolding(h.portfolioID, h.buyPrice, h.buyQuantity, h.ticker,df.parse(h.buyDate));
+	}
+	
+	@DELETE
+	@Path("/removeHolding")
+	@Consumes("application/json")
+	public void removeHolding (removeholding r) {
+		bean.removeHolding(r.holdingID);
+	}
+}
+
+class adduser{
+	String fname;
+	String lname;
+	public String getFname() {
+		return fname;
+	}
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+	public String getLname() {
+		return lname;
+	}
+	public void setLname(String lname) {
+		this.lname = lname;
+	}
+}
+
+class addportfolio {
+
+	public String portfolioName;
+	public String getPortfolioName() {
+		return portfolioName;
+	}
+	public void setPortfolioName(String portfolioName) {
+		this.portfolioName = portfolioName;
+	}
+}
+
+class removeholding {
+	public int holdingID;
+
+	public int getHoldingID() {
+		return holdingID;
+	}
+
+	public void setHoldingID(int holdingID) {
+		this.holdingID = holdingID;
+	}
+}
+
+class addholding {
+	public int portfolioID;
+	public double buyPrice;
+	public int buyQuantity;
+	public String ticker;
+	public String buyDate;
+	public String getBuyDate() {
+		return buyDate;
+	}
+	public void setBuyDate(String buyDate) {
+		this.buyDate = buyDate;
+	}
+	public int getPortfolioID() {
+		return portfolioID;
+	}
+	public void setPortfolioID(int portfolioID) {
+		this.portfolioID = portfolioID;
+	}
+	public double getBuyPrice() {
+		return buyPrice;
+	}
+	public void setBuyPrice(double buyPrice) {
+		this.buyPrice = buyPrice;
+	}
+	public int getBuyQuantity() {
+		return buyQuantity;
+	}
+	public void setBuyQuantity(int buyQuantity) {
+		this.buyQuantity = buyQuantity;
+	}
+	public String getTicker() {
+		return ticker;
+	}
+	public void setTicker(String ticker) {
+		this.ticker = ticker;
+	}
+}

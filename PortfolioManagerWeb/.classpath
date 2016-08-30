@@ -14,5 +14,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="src" path="/PortfolioManagerEJBClient"/>
+	<classpathentry kind="lib" path="C:/JavaEEBoss2/Snippets/jackson-annotations-2.5.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
