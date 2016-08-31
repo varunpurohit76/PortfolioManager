@@ -13,5 +13,10 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="src" path="/PortfolioManagerJPA"/>
+	<classpathentry kind="lib" path="C:/JavaEEBoss2/Snippets/commons-math3-3.6.1.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="../lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

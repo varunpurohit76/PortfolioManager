@@ -1,0 +1,22 @@
+package portfolio.manager.jpa;
+
+public class ReturnPortfolioValues {
+	public double investedValue;
+	public double currentValue;
+	public double profit;
+	public double sharpe;
+	public double alpha;
+	public double beta;
+	public double valueAtRisk;
+	public ReturnPortfolioValues(double investedValue, double currentValue, double profit, double sharpe, double alpha,
+			double beta, double valueAtRisk) {
+		super();
+		this.investedValue = investedValue;
+		this.currentValue = currentValue;
+		this.profit = profit;
+		this.sharpe = sharpe;
+		this.alpha = alpha;
+		this.beta = beta;
+		this.valueAtRisk = valueAtRisk;
+	}
+}

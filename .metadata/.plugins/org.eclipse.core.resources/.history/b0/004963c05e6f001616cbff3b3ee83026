@@ -1,0 +1,382 @@
+package portfolio.manager.ejb;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.ejb.Local;
+import javax.ejb.Remote;
+import javax.ejb.Stateful;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
+import org.apache.commons.math3.stat.correlation.Covariance;
+
+import portfolio.manager.jpa.AggStock;
+import portfolio.manager.jpa.Holding;
+import portfolio.manager.jpa.Portfolio;
+import portfolio.manager.jpa.ReturnPortfolioValues;
+import portfolio.manager.jpa.Stock;
+import portfolio.manager.jpa.User;
+
+/**
+ * Session Bean implementation class PortfolioManagerBean
+ */
+@Stateful
+@Remote(PortfolioManagerBeanRemote.class)
+@Local(PortfolioManagerBeanLocal.class)
+public class PortfolioManagerBean implements PortfolioManagerBeanRemote, PortfolioManagerBeanLocal {
+
+	@PersistenceContext(unitName = "PortfolioManagerJPA-PU")
+	private EntityManager em;
+
+	public PortfolioManagerBean() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void addUser(String fname, String lname) {
+		User u = new User();
+		u.setFirstName(fname);
+		u.setLastName(lname);
+		em.persist(u);
+	}
+	
+	@Override
+	public List<User> getAllUsers() {
+		TypedQuery<User> query = em.createQuery("SELECT u FROM User AS u", User.class);
+		List<User> users = query.getResultList();
+		return users;
+	}
+	
+	@Override
+	public void addPortfolio(int userID, String portfolioName) {
+		Portfolio p = new Portfolio();
+		User user = em.find(User.class, userID);
+		p.setUser(user);
+		p.setPortfolioName(portfolioName);
+		p.setLastUpdated(new Date());
+		em.persist(p);
+	}
+	
+	@Override
+	public List<Portfolio> getPortfolio() {
+		TypedQuery<Portfolio> query = em.createQuery("SELECT p FROM Portfolio AS p", Portfolio.class);
+		List<Portfolio> portfolios = query.getResultList();
+		return portfolios;
+	}
+	
+	@Override
+	public List<Portfolio> getPortfolioByID( int portfolioID) {
+		String sql = "SELECT p FROM Portfolio AS p WHERE p.portfolioID = " + portfolioID;
+		TypedQuery<Portfolio> query = em.createQuery(sql, Portfolio.class);
+		List<Portfolio> portfolio = query.getResultList();
+		return portfolio;
+	}
+	
+	@Override
+	public List<Holding> getHoldingsByPortfolioID( int portfolioID) {
+		TypedQuery<Holding> query = em.createQuery("SELECT h FROM Holding AS h WHERE h.portfolio = :name", Holding.class);
+        query.setParameter("name", em.find(Portfolio.class, portfolioID));
+		List<Holding> holdings = query.getResultList();
+		return holdings;
+	}
+	
+	@Override
+	public List<AggStock> getAggHoldingsByPortfolioID( int portfolioID) {
+		Query query = em.createNativeQuery("select h.ticker, sum(h.buyQuantity) as quantity, sum((buyQuantity*buyPrice)) as totalBuyPrice, sum((buyQuantity*close)) as todayValue, round(sum((buyQuantity*close))/:portfolioValuation, 2) as ratio from holding as h, stock as s where s.date = '2013-03-27' and h.ticker = s.ticker and h.fk_portfolioID = :portfolioID group by h.ticker");
+        query.setParameter("portfolioID", portfolioID);
+        query.setParameter("portfolioValuation", calculatePortfolioValuation(portfolioID));
+		List<Object[]> holdings = query.getResultList();
+		ArrayList<AggStock> stocks = new ArrayList<AggStock>();
+		for(Object[] o: holdings)
+		{
+			stocks.add(new AggStock((String) o[0], (java.math.BigDecimal) o[1], (double) o[2], (double) o[3], (double)o[3] - (double)o[2], (double)o[4] ));
+		}
+		return stocks;
+	}
+	
+	
+	@Override
+	public boolean removePortfolio (int portfolioID) {
+		Query query_del_holding = em.createQuery("DELETE FROM Holding AS h WHERE h.portfolio = :name");
+        query_del_holding.setParameter("name", em.find(Portfolio.class, portfolioID));
+		query_del_holding.executeUpdate();
+		
+		Query query_del = em.createQuery("DELETE FROM Portfolio p WHERE p.portfolioID = :set");
+		int delStatus = query_del.setParameter("set", portfolioID).executeUpdate();
+		
+		if(delStatus == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean addHolding(int portfolioID, double buyPrice, int buyQuantity, String ticker, Date buyDate) {
+
+		String sql_check = "SELECT s FROM Stock AS s WHERE s.ticker = '" + ticker + "' AND s.date = ?";
+		TypedQuery <Stock> query_check = em.createQuery(sql_check, Stock.class);
+		query_check.setParameter(1, buyDate);
+		List<Stock> s_check = query_check.getResultList();
+		if(s_check.isEmpty()) {
+			return false;
+		}				
+		Holding h = new Holding();		
+		String sql_s = "SELECT s FROM Stock AS s WHERE s.ticker = '" + ticker + "' AND s.date = ?";
+		TypedQuery <Stock> query_s = em.createQuery(sql_s, Stock.class);
+		query_s.setParameter(1, buyDate);
+		Stock s = query_s.getSingleResult();
+		h.setStock(s);
+		Portfolio p_ref = em.find(Portfolio.class, portfolioID);
+		h.setPortfolio(p_ref);
+		h.setBuyDate(buyDate);
+		h.setBuyPrice(buyPrice);
+		h.setBuyQuantity(buyQuantity);
+		h.setTicker(ticker);
+		em.persist(h);
+		
+		return true;
+	}
+	
+	@Override
+	public int removeHolding(int holdingID) {
+		Query query = em.createQuery("DELETE FROM Holding h WHERE h.holdingID = :set");
+		int deleteStatus = query.setParameter("set", holdingID).executeUpdate();
+		return deleteStatus;
+	}
+	
+	@Override
+	public ReturnPortfolioValues getPortfolioMetrics(int portfolioID) {
+		double investedValue = getInvestedValue(portfolioID);
+		double portfolioValuation = calculatePortfolioValuation(portfolioID);
+		ReturnPortfolioValues r = new ReturnPortfolioValues();
+		r.setInvestedValue(investedValue);
+		r.setCurrentValue(portfolioValuation);
+		r.setProfit(investedValue-portfolioValuation);
+		return r;
+	}
+	
+	@Override
+	public ReturnPortfolioValuesTotal getPortfolioMetricsTotal(int portfolioID) {
+		double investedValue = getInvestedValue(portfolioID);
+		double portfolioValuation = calculatePortfolioValuation(portfolioID);
+		ReturnPortfolioValues r = new ReturnPortfolioValues();
+		r.setInvestedValue(investedValue);
+		r.setCurrentValue(portfolioValuation);
+		r.setProfit(investedValue-portfolioValuation);
+		r.setAlpha(getAlphaOfPortfolio(portfolioID));
+		r.setBeta(getBetaOfPortfolio(portfolioID));
+		r.setSharpe(getSharpeOfPortfolio(portfolioID));
+		r.setValueAtRisk(varOfPortfolio(portfolioID));
+		return r;
+	}
+	
+	public double getInvestedValue(int portfolioID) {
+		Query query = em.createNativeQuery("SELECT SUM(buyPrice * buyQuantity) FROM portfolio.holding  where fk_portfolioID = :portfolioID");
+        query.setParameter("portfolioID", portfolioID);
+		Double value = (Double) query.getSingleResult();
+		if(value == null) { 
+			return 0;	
+		} else {
+			return value;
+		}
+	}
+	public double calculatePortfolioValuation(int portfolioID) {
+		Query query = em.createNativeQuery(
+				"SELECT buyQuantity, close FROM Holding h join Stock s on s.ticker = h.ticker where fk_portfolioID = :ID and date = :date");
+		query.setParameter("ID", portfolioID);
+		query.setParameter("date", "2013-03-27");
+		List<Object[]> list = query.getResultList();
+		double sum = 0;
+		for (Object[] o : list) {
+			int quantity = (int) o[0];
+			double close = (double) o[1];
+			sum += quantity * close;
+		}
+		return sum;
+	}
+	
+
+	public double getStdDeviation(List<Double> array)
+	{
+		double sum=0;
+		for(double a:array)
+		{
+			sum+=a;
+		}
+		double mean = sum/array.size();
+		sum=0;
+		for(double a:array)
+		{
+			sum+=(mean-a)*(mean-a);
+		}
+		return Math.sqrt(sum/array.size());
+		
+	}
+
+	public double getPortfolioValuation(int portfolioID) {
+
+		Query query = em.createNativeQuery(
+				"SELECT buyQuantity, close FROM Holding h join Stock s on s.ticker = h.ticker where fk_portfolioID = :ID and date = :date");
+		query.setParameter("ID", portfolioID);
+		query.setParameter("date", "2013-01-02");
+		List<Object[]> list = query.getResultList();
+		double sum = 0;
+		for (Object[] o : list) {
+			int quantity = (int) o[0];
+			double close = (double) o[1];
+			sum += (quantity * close);
+		}
+		return sum;
+
+		
+	}
+	
+	public double getWeightageOfStock(int portfolioID, String ticker){
+		
+		Query query = em.createNativeQuery("SELECT buyQuantity, close FROM Holding h JOIN Stock s on h.ticker = s.ticker WHERE h.ticker = :tick and s.date = :date");
+		query.setParameter("tick", ticker);
+		query.setParameter("date", "2013-01-02");
+		List<Object[]> list = query.getResultList();
+		double weight=0;
+		double stockValuation=0;
+		for(Object[] o : list){
+			int buyQuantity = (int) o[0];
+			double close = (double) o[1];
+			stockValuation += (buyQuantity * close);
+			
+		}
+		weight = stockValuation/getPortfolioValuation(portfolioID);
+		
+		return weight;
+	}
+
+	public List<Double> getReturnOnStock(String ticker){
+		Query query = em.createNativeQuery("SELECT close FROM STOCK s where ticker = :tick order by date desc");
+		query.setParameter("tick", ticker);
+		List<Double> list = query.getResultList();
+		ArrayList<Double> stockReturn = new ArrayList<Double>();
+		for(int i=0;i<list.size()-1;i++){
+			  
+			stockReturn.add(Math.log(list.get(i)/list.get(i+1)));
+		}
+		return stockReturn;
+	}
+	
+	public List<Double> getReturnOnPortfolio(int portfolioID){
+		Query query = em.createNativeQuery("SELECT ticker FROM Holding h where fk_portfolioID = :portfolioID");
+		query.setParameter("portfolioID", portfolioID);
+		
+		List<String> stockListInPortfolio = query.getResultList();
+		ArrayList<Double> portfolioReturn = new ArrayList<Double>();
+		for(int i=0; i<stockListInPortfolio.size(); i++){
+			List<Double> stockReturn = getReturnOnStock(stockListInPortfolio.get(i));
+			double weightage = getWeightageOfStock(portfolioID, stockListInPortfolio.get(i));
+			if(portfolioReturn.size()==0)
+			{
+				for(int k=0; k<stockReturn.size(); k++)
+					portfolioReturn.add((double) 0);
+			}
+			for( int j=0;j<stockReturn.size();j++){
+				portfolioReturn.set(j, portfolioReturn.get(j)+
+						weightage*stockReturn.get(j));
+			}
+			 		
+		}
+		
+		return portfolioReturn;
+	}
+	public List<Double> getReturnOnIndex()
+	{
+		Query q = em.createNativeQuery("SELECT value from snp500 order by date desc");
+		List<Double> valuesList = q.getResultList();
+		List<Double> indexReturn = new ArrayList<Double>();
+		for(int i=0; i<valuesList.size()-1; i++)
+		{
+			indexReturn.add(Math.log(valuesList.get(i)/valuesList.get(i+1)));
+		}
+		return indexReturn;
+	}
+	public double getStdDeviationOnStock(String ticker)
+	{
+		List<Double> stockReturn = getReturnOnStock(ticker);
+		
+		return getStdDeviation(stockReturn);
+		
+		
+	}
+	public double getBetaOfStock(String ticker)
+	{
+//		System.out.println("test1 passed");
+		Covariance c = new Covariance();
+//		System.out.println("test2 passed");
+		List<Double> indexReturn = getReturnOnIndex();
+		double[] indexReturnArray = new double[indexReturn.size()];
+		for(int i=0; i<indexReturn.size(); i++)
+		{
+			indexReturnArray[i] = indexReturn.get(i).doubleValue();
+		}
+		List<Double> stockReturn = getReturnOnStock(ticker);
+		double[] stockReturnArray = new double[stockReturn.size()];
+		for(int i=0; i<stockReturn.size(); i++)
+		{
+			stockReturnArray[i] = stockReturn.get(i).doubleValue();
+		}		
+		double temp1 = c.covariance(indexReturnArray, stockReturnArray);
+		double temp2 = c.covariance(indexReturnArray, indexReturnArray);
+		return temp1/temp2;
+	}
+	public double getBetaOfPortfolio(int portfolioID)
+	{
+		Query query = em.createNativeQuery("SELECT ticker FROM Holding h where fk_portfolioID = :portfolioID");
+		query.setParameter("portfolioID", portfolioID);
+		
+		List<String> list = query.getResultList();
+		double sum=0;
+		for(String stock:list)
+		{
+			sum+=(getWeightageOfStock(portfolioID, stock) * getBetaOfStock(stock));
+		}
+		return sum;
+	}
+	public double getAlphaOfPortfolio(int portfolioID)
+	{
+		List<Double> returnPortfolio = getReturnOnPortfolio(portfolioID);
+		Double sumOfPortfolioReturns = (double) 0;
+		for(Double singleReturn: returnPortfolio)
+		{
+			sumOfPortfolioReturns += singleReturn;
+		}
+		List<Double> returnIndex = getReturnOnIndex();
+		Double marketReturn = (double) 0;
+		for(Double singleReturn:returnIndex)
+		{
+			marketReturn+=singleReturn;
+		}
+		double beta = getBetaOfPortfolio(portfolioID);
+		return sumOfPortfolioReturns - beta*marketReturn;
+//		return 0;
+	}
+	public double getSharpeOfPortfolio(int portfolioID){
+		List<Double> portfolioReturn = getReturnOnPortfolio(portfolioID);
+		double sum=0;
+		for(Double singleValue:portfolioReturn)
+		{
+			sum+=singleValue;
+		}
+		return (sum/portfolioReturn.size())/getStdDeviation(portfolioReturn);
+		
+	}
+	public double varOfPortfolio(int portfolioID)
+	{
+		return -1.65*getStdDeviation(getReturnOnPortfolio(portfolioID))*getPortfolioValuation(portfolioID);
+		
+		
+	}
+	
+	
+}

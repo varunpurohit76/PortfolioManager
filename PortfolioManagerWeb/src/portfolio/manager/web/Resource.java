@@ -20,7 +20,7 @@ import portfolio.manager.ejb.PortfolioManagerBeanLocal;
 import portfolio.manager.jpa.AggStock;
 import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
-import portfolio.manager.jpa.ReturnDouble;
+import portfolio.manager.jpa.ReturnPortfolioValues;
 import portfolio.manager.jpa.User;
 
 @Path("/rest")
@@ -90,12 +90,22 @@ public class Resource {
 	
 
 	@GET
-	@Path("/getInvestedValue/{portfolioID}")
+	@Path("/getPortfolioValuesTotal/{portfolioID}")
 	@Produces("application/json")
-	public ReturnDouble getinvestedValue(@PathParam("portfolioID") int portfolioID) {
-		ReturnDouble returnObj = bean.getInvestedValue(portfolioID);
+	public ReturnPortfolioValues getPortfolioValueTotal(@PathParam("portfolioID") int portfolioID) {
+		ReturnPortfolioValues returnObj = bean.getPortfolioMetricsTotal(portfolioID);
 		return returnObj;
 	}
+	
+
+	@GET
+	@Path("/getPortfolioValues/{portfolioID}")
+	@Produces("application/json")
+	public ReturnPortfolioValues getPortfolioValue(@PathParam("portfolioID") int portfolioID) {
+		ReturnPortfolioValues returnObj = bean.getPortfolioMetrics(portfolioID);
+		return returnObj;
+	}
+
 	
 	@GET
 	@Path("/getAggHoldingsByPortfolioID/{portfolioID}")

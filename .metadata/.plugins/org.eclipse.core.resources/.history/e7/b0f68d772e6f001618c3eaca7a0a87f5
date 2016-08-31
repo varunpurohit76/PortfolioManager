@@ -1,0 +1,10 @@
+package portfolio.manager.jpa;
+
+public class ReturnPortfolioValues {
+	public double value;
+
+	public ReturnPortfolioValues(double value) {
+		super();
+		this.value = value;
+	} 
+}

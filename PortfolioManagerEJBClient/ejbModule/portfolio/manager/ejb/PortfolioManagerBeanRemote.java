@@ -8,7 +8,7 @@ import javax.ejb.Remote;
 import portfolio.manager.jpa.AggStock;
 import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
-import portfolio.manager.jpa.ReturnDouble;
+import portfolio.manager.jpa.ReturnPortfolioValues;
 import portfolio.manager.jpa.User;
 
 @Remote
@@ -24,5 +24,6 @@ public interface PortfolioManagerBeanRemote {
 	public int removeHolding(int holdingID);
 	boolean removePortfolio(int portfolioID);
 	List<AggStock> getAggHoldingsByPortfolioID(int portfolioID);
-	ReturnDouble getInvestedValue(int portfolioID);
+	ReturnPortfolioValues getPortfolioMetrics(int portfolioID);
+	ReturnPortfolioValues getPortfolioMetricsTotal(int portfolioID);
 }
