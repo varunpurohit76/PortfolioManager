@@ -8,6 +8,7 @@ import javax.ejb.Local;
 import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.ReturnPortfolioValues;
+import portfolio.manager.jpa.Stock;
 import portfolio.manager.jpa.User;
 import portfolio.manager.jpa.AggStock;
 
@@ -26,4 +27,5 @@ public interface PortfolioManagerBeanLocal {
 	List<AggStock> getAggHoldingsByPortfolioID(int portfolioID);
 	ReturnPortfolioValues getPortfolioMetrics(int portfolioID);
 	ReturnPortfolioValues getPortfolioMetricsTotal(int portfolioID);
+	List<Stock> getStockDetails(String stockName);
 }

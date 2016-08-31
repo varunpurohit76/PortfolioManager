@@ -121,9 +121,9 @@ public class Resource {
 	}
 	
 	@GET
-	@Path("getStockDetails/{stockName}")
+	@Path("getStockDetails/{StockName}")
 	@Produces("application/json")
-	public List<Stock> getStockDetails(@PathParam("stockName") String stockName) {
+	public List<Stock> getStockDetails(@PathParam("String stockName") String stockName) {
 		return bean.getStockDetails(stockName);
 	}
 	

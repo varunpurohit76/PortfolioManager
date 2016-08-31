@@ -9,7 +9,6 @@ import portfolio.manager.jpa.AggStock;
 import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.ReturnPortfolioValues;
-import portfolio.manager.jpa.Stock;
 import portfolio.manager.jpa.User;
 
 @Remote
@@ -27,5 +26,4 @@ public interface PortfolioManagerBeanRemote {
 	List<AggStock> getAggHoldingsByPortfolioID(int portfolioID);
 	ReturnPortfolioValues getPortfolioMetrics(int portfolioID);
 	ReturnPortfolioValues getPortfolioMetricsTotal(int portfolioID);
-	List<Stock> getStockDetails(String stockName);
 }

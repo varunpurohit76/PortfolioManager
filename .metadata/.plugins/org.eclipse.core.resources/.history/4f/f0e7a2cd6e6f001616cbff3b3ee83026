@@ -98,13 +98,6 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		return stocks;
 	}
 	
-	@Override
-	public List<Stock> getStockDetails(String stockName) {
-		TypedQuery<Stock> query = em.createQuery("SELECT s FROM Stock s where s.ticker = :stockName", Stock.class);
-		query.setParameter("stockName", stockName);
-		List<Stock> ret = query.getResultList();
-		return ret;
-	}
 	
 	@Override
 	public boolean removePortfolio (int portfolioID) {
@@ -163,7 +156,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		ReturnPortfolioValues r = new ReturnPortfolioValues();
 		r.setInvestedValue(investedValue);
 		r.setCurrentValue(portfolioValuation);
-		r.setProfit(portfolioValuation - investedValue);
+		r.setProfit(investedValue-portfolioValuation);
 		return r;
 	}
 	
@@ -174,7 +167,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		ReturnPortfolioValues r = new ReturnPortfolioValues();
 		r.setInvestedValue(investedValue);
 		r.setCurrentValue(portfolioValuation);
-		r.setProfit(portfolioValuation - investedValue);
+		r.setProfit(investedValue-portfolioValuation);
 		r.setAlpha(getAlphaOfPortfolio(portfolioID));
 		r.setBeta(getBetaOfPortfolio(portfolioID));
 		r.setSharpe(getSharpeOfPortfolio(portfolioID));

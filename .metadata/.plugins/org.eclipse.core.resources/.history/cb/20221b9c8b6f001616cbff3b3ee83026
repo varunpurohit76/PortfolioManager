@@ -21,7 +21,6 @@ import portfolio.manager.jpa.AggStock;
 import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.ReturnPortfolioValues;
-import portfolio.manager.jpa.Stock;
 import portfolio.manager.jpa.User;
 
 @Path("/rest")
@@ -118,13 +117,6 @@ public class Resource {
 			List<AggStock> p = bean.getAggHoldingsByPortfolioID(portfolioID);
 			return p;
 		}
-	}
-	
-	@GET
-	@Path("getStockDetails/{stockName}")
-	@Produces("application/json")
-	public List<Stock> getStockDetails(@PathParam("stockName") String stockName) {
-		return bean.getStockDetails(stockName);
 	}
 	
 	@POST

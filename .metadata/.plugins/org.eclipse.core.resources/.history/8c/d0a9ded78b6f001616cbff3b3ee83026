@@ -3,17 +3,16 @@ package portfolio.manager.ejb;
 import java.util.Date;
 import java.util.List;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
-import portfolio.manager.jpa.AggStock;
 import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.ReturnPortfolioValues;
-import portfolio.manager.jpa.Stock;
 import portfolio.manager.jpa.User;
+import portfolio.manager.jpa.AggStock;
 
-@Remote
-public interface PortfolioManagerBeanRemote {
+@Local
+public interface PortfolioManagerBeanLocal {
 	public void addUser(String fname, String lname);
 	public List<User> getAllUsers();
 //	public void addUser2(String fname, String lname);
@@ -27,5 +26,4 @@ public interface PortfolioManagerBeanRemote {
 	List<AggStock> getAggHoldingsByPortfolioID(int portfolioID);
 	ReturnPortfolioValues getPortfolioMetrics(int portfolioID);
 	ReturnPortfolioValues getPortfolioMetricsTotal(int portfolioID);
-	List<Stock> getStockDetails(String stockName);
 }
