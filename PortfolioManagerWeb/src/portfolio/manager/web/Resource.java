@@ -9,6 +9,7 @@ import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import portfolio.manager.ejb.PortfolioManagerBeanLocal;
 import portfolio.manager.jpa.AggStock;
+import portfolio.manager.jpa.FirstScreen;
 import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.ReturnPortfolioValues;
@@ -61,6 +63,19 @@ public class Resource {
 			return null;
 		else {
 			List<Portfolio> p = bean.getPortfolio();
+			return p;
+		}
+	}
+	
+	@GET
+	@Path("/getFirstScreen")
+	@Produces("application/json")
+	public List<FirstScreen> getFirstScreen() {
+
+		if (bean == null) 
+			return null;
+		else {
+			List<FirstScreen> p = bean.getFirstscreen();
 			return p;
 		}
 	}
@@ -127,6 +142,13 @@ public class Resource {
 		return bean.getStockDetails(stockName);
 	}
 	
+	@PUT
+	@Path("/renamePortfolio/{portfolioID}")
+	@Consumes("application/json")
+	public void rennamePortfolio(@PathParam("portfolioID") int portfolioID, renameportfolio r) {
+		bean.renamePortfolio(portfolioID, r.newName);
+	}
+	
 	@POST
 	@Path("/addUser")
 	@Consumes("application/json")
@@ -164,6 +186,16 @@ public class Resource {
 	@Produces("application/json")
 	public boolean removePortfolio (removeportfolio r) {
 		return bean.removePortfolio(r.portfolioID);
+	}
+}
+
+class renameportfolio{
+	String newName;
+	public String getNewName() {
+		return newName;
+	}
+	public void setNewName(String newName) {
+		this.newName = newName;
 	}
 }
 

@@ -15,6 +15,7 @@ import javax.persistence.TypedQuery;
 import org.apache.commons.math3.stat.correlation.Covariance;
 
 import portfolio.manager.jpa.AggStock;
+import portfolio.manager.jpa.FirstScreen;
 import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.ReturnPortfolioValues;
@@ -99,6 +100,18 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 	}
 	
 	@Override
+	public List<FirstScreen> getFirstscreen() {
+		Query query = em.createNativeQuery("SELECT * FROM portfolio.portfolio;");
+		List<Object[]> obs = query.getResultList();
+		ArrayList<FirstScreen> f = new ArrayList<FirstScreen>();
+		for(Object[] o: obs)
+		{
+			f.add(new FirstScreen((int) o[0], (String) o[1], (double) getInvestedValue((int) o[0]), (double) getPortfolioValuation( (int) o[0]), (double) getPortfolioValuation( (int) o[0]) - (double) getInvestedValue((int) o[0])));
+		}
+		return f;
+	}
+	
+	@Override
 	public List<Stock> getStockDetails(String stockName) {
 		TypedQuery<Stock> query = em.createQuery("SELECT s FROM Stock s where s.ticker = :stockName", Stock.class);
 		query.setParameter("stockName", stockName);
@@ -157,6 +170,14 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 	}
 	
 	@Override
+	public void renamePortfolio(int pID, String newName) {
+		Query query = em.createNativeQuery("UPDATE portfolio SET portfolioName = :newName WHERE portfolioID = :pID");
+		query.setParameter("pID", pID);
+		query.setParameter("newName",newName);
+		query.executeUpdate();
+	}
+	
+	@Override
 	public ReturnPortfolioValues getPortfolioMetrics(int portfolioID) {
 		double investedValue = getInvestedValue(portfolioID);
 		double portfolioValuation = calculatePortfolioValuation(portfolioID);
@@ -192,6 +213,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 			return value;
 		}
 	}
+	
 	public double calculatePortfolioValuation(int portfolioID) {
 		Query query = em.createNativeQuery(
 				"SELECT buyQuantity, close FROM Holding h join Stock s on s.ticker = h.ticker where fk_portfolioID = :ID and date = :date");
@@ -207,7 +229,6 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		return sum;
 	}
 	
-
 	public double getStdDeviation(List<Double> array)
 	{
 		double sum=0;
@@ -297,6 +318,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		
 		return portfolioReturn;
 	}
+	
 	public List<Double> getReturnOnIndex()
 	{
 		Query q = em.createNativeQuery("SELECT value from snp500 order by date desc");
@@ -308,6 +330,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		}
 		return indexReturn;
 	}
+	
 	public double getStdDeviationOnStock(String ticker)
 	{
 		List<Double> stockReturn = getReturnOnStock(ticker);
@@ -316,6 +339,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		
 		
 	}
+	
 	public double getBetaOfStock(String ticker)
 	{
 //		System.out.println("test1 passed");
@@ -337,6 +361,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		double temp2 = c.covariance(indexReturnArray, indexReturnArray);
 		return temp1/temp2;
 	}
+	
 	public double getBetaOfPortfolio(int portfolioID)
 	{
 		Query query = em.createNativeQuery("SELECT ticker FROM Holding h where fk_portfolioID = :portfolioID");
@@ -350,6 +375,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		}
 		return sum;
 	}
+	
 	public double getAlphaOfPortfolio(int portfolioID)
 	{
 		List<Double> returnPortfolio = getReturnOnPortfolio(portfolioID);
@@ -368,6 +394,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		return sumOfPortfolioReturns - beta*marketReturn;
 //		return 0;
 	}
+	
 	public double getSharpeOfPortfolio(int portfolioID){
 		List<Double> portfolioReturn = getReturnOnPortfolio(portfolioID);
 		double sum=0;
@@ -378,6 +405,7 @@ public class PortfolioManagerBean implements PortfolioManagerBeanRemote, Portfol
 		return (sum/portfolioReturn.size())/getStdDeviation(portfolioReturn);
 		
 	}
+	
 	public double varOfPortfolio(int portfolioID)
 	{
 		return -1.65*getStdDeviation(getReturnOnPortfolio(portfolioID))*getPortfolioValuation(portfolioID);

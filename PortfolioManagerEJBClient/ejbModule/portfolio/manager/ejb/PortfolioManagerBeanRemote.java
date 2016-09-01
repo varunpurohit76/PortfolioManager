@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import portfolio.manager.jpa.AggStock;
+import portfolio.manager.jpa.FirstScreen;
 import portfolio.manager.jpa.Holding;
 import portfolio.manager.jpa.Portfolio;
 import portfolio.manager.jpa.ReturnPortfolioValues;
@@ -28,4 +29,6 @@ public interface PortfolioManagerBeanRemote {
 	ReturnPortfolioValues getPortfolioMetrics(int portfolioID);
 	ReturnPortfolioValues getPortfolioMetricsTotal(int portfolioID);
 	List<Stock> getStockDetails(String stockName);
+	List<FirstScreen> getFirstscreen();
+	void renamePortfolio(int portfolioID, String newName);
 }

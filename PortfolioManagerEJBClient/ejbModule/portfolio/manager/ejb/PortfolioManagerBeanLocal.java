@@ -11,6 +11,7 @@ import portfolio.manager.jpa.ReturnPortfolioValues;
 import portfolio.manager.jpa.Stock;
 import portfolio.manager.jpa.User;
 import portfolio.manager.jpa.AggStock;
+import portfolio.manager.jpa.FirstScreen;
 
 @Local
 public interface PortfolioManagerBeanLocal {
@@ -28,4 +29,6 @@ public interface PortfolioManagerBeanLocal {
 	ReturnPortfolioValues getPortfolioMetrics(int portfolioID);
 	ReturnPortfolioValues getPortfolioMetricsTotal(int portfolioID);
 	List<Stock> getStockDetails(String stockName);
+	List<FirstScreen> getFirstscreen();
+	void renamePortfolio(int portfolioID, String newName);
 }
